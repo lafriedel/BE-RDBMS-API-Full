@@ -5,12 +5,18 @@ const router = express.Router();
 
 const db = knex(knexConfig.development);
 
+const errors = {
+    '19':'A record with that name already exists.';
+}
+
 // POST to /api/cohorts
 router.post('/', async (req, res) => {
     try {
-
+        const [id] = await db('cohorts').insert(req.body);
+        res.status(201).json(id);
     } catch (error) {
-        
+        const errorMsg = errors[error.errno] || "There was an error.";
+        res.status(500).json(errorMsg);
     }
 })
 
