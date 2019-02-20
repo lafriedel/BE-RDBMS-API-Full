@@ -104,7 +104,7 @@ router.delete("/:id", async (req, res) => {
       .where({ id: req.params.id })
       .del();
     if (cohort > 0) {
-      res.status(204).send("The record was successfully deleted.");
+      res.status(204).end();
     } else {
       res
         .status(404)

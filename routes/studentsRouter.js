@@ -67,7 +67,12 @@ router.put('/:id', async (req, res) => {
 // DELETE to /api/students/:id
 router.delete('/:id', async (req, res) => {
     try {
-
+        const student = await db('students').where('id', req.params.id).del();
+        if (student > 0) {
+            res.status(204).end();
+        } else {
+            res.status(404).json({error: `A student with an ID of ${req.params.id} does not exist.`});
+        }
     } catch (error) {
         const errorMsg = errors[error.errno] || errors[default_error];
         res.status(500).json(errorMsg);
