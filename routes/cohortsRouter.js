@@ -6,7 +6,7 @@ const router = express.Router();
 const db = knex(knexConfig.development);
 
 const errors = {
-    '19':'A record with that name already exists.';
+    '19':'A record with that name already exists.'
 }
 
 // POST to /api/cohorts
@@ -57,9 +57,16 @@ router.get('/:id/students', async (req, res) => {
 // PUT to /api/cohorts/:id
 router.put('/:id', async (req, res) => {
     try {
+        const num = await db('cohorts').where({id: req.params.id}).update(req.body);
 
+        if (num > 0) {
+            const [cohort] = await db('cohorts').where({id: req.params.id});
+            res.status(200).json(cohort)
+        } else {
+            res.status(404).json({error: `A cohort with the ID of ${req.params.id} does not exist.`});
+        }
     } catch (error) {
-        
+        res.status(500).json(error);
     }
 })
 
