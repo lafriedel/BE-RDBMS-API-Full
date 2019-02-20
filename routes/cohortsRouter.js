@@ -51,9 +51,16 @@ router.get('/:id', async (req, res) => {
 // GET to /api/cohorts/:id/students
 router.get('/:id/students', async (req, res) => {
     try {
-
+        const students = await db('students').where({cohort_id: req.params.id})
+        if (students.length > 0) {
+            const [reqStudents] = students;
+            res.status(200).json(reqStudents);
+        } else {
+            res.status(404).json({error: `The cohort with the ID of ${req.params.id} does not have any students.`})
+        }
     } catch (error) {
-        
+        const errorMsg = errors[error.errno] || errors[default_error];
+        res.status(500).json(errorMsg);
     }
 })
 
