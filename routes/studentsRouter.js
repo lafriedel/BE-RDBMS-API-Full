@@ -51,7 +51,13 @@ router.get('/:id', async (req, res) => {
 // PUT to /api/students/:id
 router.put('/:id', async (req, res) => {
     try {
-
+        const num = await db('students').where('id', req.params.id).update(req.body);
+        if (num > 0) {
+            const [student] = await db('students').where('id', req.params.id);
+            res.status(200).json(student);
+        } else {
+            res.status(404).json({error: `A student with an ID of ${req.params.id} does not exist.`});
+        }
     } catch (error) {
         const errorMsg = errors[error.errno] || errors[default_error];
         res.status(500).json(errorMsg);
