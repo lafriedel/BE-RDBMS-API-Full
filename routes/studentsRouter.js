@@ -37,7 +37,7 @@ router.get("/:id", async (req, res) => {
   try {
     const student = await db("students")
       .join("cohorts", "cohorts.id", "students.cohort_id")
-      .select("students.name", "students.id", "cohorts.name as cohort")
+      .select("students.id", "students.name", "cohorts.name as cohort")
       .where("students.id", req.params.id);
 
     if (student.length > 0) {
