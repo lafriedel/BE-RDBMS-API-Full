@@ -13,7 +13,8 @@ const errors = {
 // POST to /api/students
 router.post('/', async (req, res) => {
     try {
-
+        const [id] = await db('students').insert(req.body);
+        res.status(201).json(id);
     } catch (error) {
         const errorMsg = errors[error.errno] || errors[default_error];
         res.status(500).json(errorMsg);
